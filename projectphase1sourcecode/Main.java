@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Random;
 
 public class Main {
+    
     class UserHandler {
         private int userId;
         private String name;
-
         private long createdAt;
         private Random random = new Random();
 
@@ -51,9 +51,10 @@ public class Main {
         private int postId;
         private int userId;
         private String content;
-
         private long createdAt;
         private List<Comment> comments;
+        private int upvotes;
+        private int downvotes;
 
         private Random random = new Random();
         public PostService(int postId, int userId, String content) {
@@ -62,6 +63,8 @@ public class Main {
             this.content = content;
             this.createdAt = System.currentTimeMillis();
             this.comments = new ArrayList<>();
+            this.upvotes = 0;
+            this.downvotes = 0;
         }
 
         // Getters and setters
@@ -81,6 +84,14 @@ public class Main {
         public List<Comment> getComments() {
             return comments;
         }
+        
+        public int getUpvotes() {
+        	return upvotes;
+        }
+        
+        public int getDownvotes() {
+        	return downvotes;
+        }
 
         // Method to delete a post
         public void deletePost(List<PostService> postList) {
@@ -97,6 +108,14 @@ public class Main {
             comments.add(comment);
         }
 
+        public void upvote() {
+        	upvotes++;
+        }
+        
+        public void downvote() {
+        	downvotes++;
+        }
+        
         public long getCreatedAt() {
             return createdAt;
         }
@@ -107,6 +126,8 @@ public class Main {
         private int userId;
         private String content;
         private long createdAt;
+        private int upvotes;
+        private int downvotes;
 
         private Random random = new Random();
 
@@ -115,6 +136,8 @@ public class Main {
             this.userId = userId;
             this.content = content;
             this.createdAt = System.currentTimeMillis();
+            this.upvotes = 0;
+            this.downvotes = 0;
         }
 
         // Getters and setters
@@ -134,6 +157,14 @@ public class Main {
         public long getCreatedAt() {
             return createdAt;
         }
+        
+        public int getUpvotes() {
+            return upvotes;
+        }
+
+        public int getDownvotes() {
+            return downvotes;
+        }
 
         // Method to delete a comment
         public void deleteComment(List<Comment> commentList) {
@@ -144,7 +175,16 @@ public class Main {
         public void updateComment(String newContent) {
             this.content = newContent;
         }
+        
+        public void upvote() {
+            upvotes++;
+        }
+
+        public void downvote() {
+            downvotes++;
+        }
     }
+    
     public static void main(String[] args) {
 
         List<UserHandler> userList = new ArrayList<>();
