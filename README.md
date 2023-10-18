@@ -40,7 +40,7 @@ updateUser(String newName): Updates the user's name.
 
 deleteUser(List<User> userList): Deletes the user from the list.
 
-PostService.java: Represents post entities and includes the following methods:
+**PostService.java: Represents post entities and includes the following methods:**
 
 createPost(int userId, String content): Creates a new post with a random post ID.
 
