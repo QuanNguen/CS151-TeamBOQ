@@ -1,0 +1,67 @@
+package skfs;
+
+import java.util.List;
+import java.util.Random;
+
+public class Comment {
+    private int commentId;
+    private int userId;
+    private String content;
+    private long createdAt;
+    private int upvotes;
+    private int downvotes;
+
+    private Random random = new Random();
+
+    public Comment(int commentId, int userId, String content) {
+        this.commentId = random.nextInt(1000);
+        this.userId = userId;
+        this.content = content;
+        this.createdAt = System.currentTimeMillis();
+        this.upvotes = 0;
+        this.downvotes = 0;
+    }
+
+    // Getters and setters
+    // Methods for deleteComment, updateComment, and other Comment specific functionality
+
+    public int getCommentId() {
+        return commentId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public int getUpvotes() {
+        return upvotes;
+    }
+
+    public int getDownvotes() {
+        return downvotes;
+    }
+
+    public void deleteComment(List<Comment> commentList) {
+        commentList.remove(this);
+    }
+
+    public void updateComment(String newContent) {
+        this.content = newContent;
+    }
+
+    public void upvote() {
+        upvotes++;
+    }
+
+    public void downvote() {
+        downvotes++;
+    }
+}
