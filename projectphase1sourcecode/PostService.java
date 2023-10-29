@@ -1,3 +1,5 @@
+package skfs;
+
 import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
@@ -10,7 +12,6 @@ public class PostService {
     private List<Comment> comments;
     private int upvotes;
     private int downvotes;
-
     private Random random = new Random();
 
     public PostService(int postId, int userId, String content) {
@@ -22,9 +23,6 @@ public class PostService {
         this.upvotes = 0;
         this.downvotes = 0;
     }
-
-    // Getters and setters
-    // Methods for deletePost, updatePost, addComment, and other PostService specific functionality
 
     public int getPostId() {
         return postId;
@@ -62,12 +60,20 @@ public class PostService {
         comments.add(comment);
     }
 
-    public void upvote() {
+    void upvote() {
         upvotes++;
     }
 
-    public void downvote() {
+    void removeUpVote() {
+        upvotes--;
+    }
+
+    void downvote() {
         downvotes++;
+    }
+
+    void removeDownVote() {
+        downvotes--;
     }
 
     public long getCreatedAt() {

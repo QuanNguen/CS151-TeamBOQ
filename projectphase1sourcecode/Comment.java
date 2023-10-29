@@ -1,3 +1,5 @@
+package skfs;
+
 import java.util.List;
 import java.util.Random;
 
@@ -8,7 +10,6 @@ public class Comment {
     private long createdAt;
     private int upvotes;
     private int downvotes;
-
     private Random random = new Random();
 
     public Comment(int commentId, int userId, String content) {
@@ -19,9 +20,6 @@ public class Comment {
         this.upvotes = 0;
         this.downvotes = 0;
     }
-
-    // Getters and setters
-    // Methods for deleteComment, updateComment, and other Comment specific functionality
 
     public int getCommentId() {
         return commentId;
@@ -55,11 +53,19 @@ public class Comment {
         this.content = newContent;
     }
 
-    public void upvote() {
+    void upvote() {
         upvotes++;
     }
 
-    public void downvote() {
+    void removeUpVote() {
+        upvotes--;
+    }
+
+    void downvote() {
         downvotes++;
+    }
+
+    void removeDownVote() {
+        downvotes--;
     }
 }

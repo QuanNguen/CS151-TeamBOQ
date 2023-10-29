@@ -1,5 +1,7 @@
-import java.util.Random;
+package skfs;
+
 import java.util.List;
+import java.util.Random;
 
 public class UserHandler {
     private int userId;
@@ -12,9 +14,6 @@ public class UserHandler {
         this.name = name;
         this.createdAt = System.currentTimeMillis();
     }
-
-    // Getters and setters
-    // Methods for deleteUser, updateUser, and other UserHandler specific functionality
 
     public int getUserId() {
         return userId;
