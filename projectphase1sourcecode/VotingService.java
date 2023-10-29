@@ -1,5 +1,3 @@
-package skfs;
-
 public class VotingService {
     Boolean votedPost = null;
     Boolean votedComment = null;
