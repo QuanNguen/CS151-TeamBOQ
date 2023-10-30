@@ -1,6 +1,6 @@
 # UML Diagram for Reddit 
 
-This project lists UML diagrams of the Reddit.
+This project lists updated UML diagrams of the Reddit.
 # Diagrams 
 |  |  |
 | :---: | :---: |
