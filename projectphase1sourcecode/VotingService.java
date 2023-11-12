@@ -12,6 +12,7 @@ public class VotingService {
             votedPost = true;
         } else {
             votedPost = null;
+            post.removeUpVote();
         }
     }
 
@@ -25,6 +26,7 @@ public class VotingService {
             votedComment = true;
         } else {
             votedComment = null;
+            comment.removeUpVote();
         }
     }
 
@@ -38,6 +40,7 @@ public class VotingService {
             votedPost = true;
         } else {
             votedPost = null;
+            post.removeDownVote();
         }
     }
 
@@ -51,6 +54,7 @@ public class VotingService {
             votedComment = true;
         } else {
             votedComment = null;
+            comment.removeDownVote();
         }
     }
 }
