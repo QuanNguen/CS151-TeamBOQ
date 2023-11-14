@@ -1,3 +1,5 @@
+package skfs;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -32,19 +34,31 @@ public class Main {
 
         System.out.println("Sorted Users:");
         for (UserHandler user : userList) {
-            System.out.println("User ID: " + user.getUserId() + ", User Name: " + user.getName());
+            System.out.println("User ID: " + user.getUserId() + ", User Name: " + user.getName() + ", Karma: " + user.getKarma());
         }
 
         System.out.println("\nSorted Posts:");
         for (PostService post : postList) {
-            System.out.println("Post ID: " + post.getPostId() + ", Post Content: " + post.getContent());
+            System.out.println("Post ID: " + post.getPostId() + ", Post Content: " + post.getContent() + ", Karma: " + post.getKarma());
         }
 
+        System.out.println("\nSorted Posts by Karma:");
+        postList.sort(Comparator.comparingInt(PostService::getKarma).reversed());
+        for (PostService post : postList) {
+            System.out.println("Post ID: " + post.getPostId() + ", Post Content: " + post.getContent() + ", Karma: " + post.getKarma());
+        }
+        
         System.out.println("\nSorted Comments:");
         for (Comment comment : commentList) {
-            System.out.println("Comment ID: " + comment.getCommentId() + ", Comment Content: " + comment.getContent());
+            System.out.println("Comment ID: " + comment.getCommentId() + ", Comment Content: " + comment.getContent() + ", Karma: " + comment.getKarma());
         }
 
+        System.out.println("\nSorted Comments by Karma:");
+        commentList.sort(Comparator.comparingInt(Comment::getKarma).reversed());
+        for (Comment comment : commentList) {
+            System.out.println("Comment ID: " + comment.getCommentId() + ", Comment Content: " + comment.getContent() + ", Karma: " + comment.getKarma());
+        }
+        
         VotingService vs = new VotingService();
         System.out.println(post1.getUpvotes());
         System.out.println(vs.votedPost);

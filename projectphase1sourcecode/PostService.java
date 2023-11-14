@@ -1,3 +1,5 @@
+package skfs;
+
 import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
@@ -45,7 +47,11 @@ public class PostService {
     public int getDownvotes() {
         return downvotes;
     }
-
+    
+    public int getKarma() {
+        return upvotes - downvotes;
+    }
+    
     public void deletePost(List<PostService> postList) {
         postList.remove(this);
     }

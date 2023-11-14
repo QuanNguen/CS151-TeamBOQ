@@ -1,3 +1,5 @@
+package skfs;
+
 import java.util.List;
 import java.util.Random;
 
@@ -43,6 +45,10 @@ public class Comment {
         return downvotes;
     }
 
+    public int getKarma() {
+        return upvotes - downvotes;
+    }
+    
     public void deleteComment(List<Comment> commentList) {
         commentList.remove(this);
     }
