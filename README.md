@@ -42,6 +42,14 @@ updateUser(String newName): Updates the user's name.
 
 deleteUser(List<User> userList): Deletes the user from the list.
 
+addPost(PostService post): Adds a post to the ArrayList of posts related to this user
+
+addComment(Comment comment): Adds a comment to the ArrayList of comments related to this user
+
+calculateKarma(): Calculates the net karma associated with this user from all their posts and comments
+
+
+
 **PostService.java: Represents post entities and includes the following methods:**
 
 createPost(int userId, String content): Creates a new post with a random post ID.
@@ -52,6 +60,8 @@ deletePost(List<PostService> postList): Deletes the post from the list.
 
 addComment(Comment comment): Adds a comment to the post.
 
+getKarma(): Returns the net karma associated with this post
+
 **Comment.java: Represents comment entities and includes the following methods:**
 
 createComment(int userId, String content): Creates a new comment with a random comment ID.
@@ -59,6 +69,8 @@ createComment(int userId, String content): Creates a new comment with a random c
 updateComment(String newContent): Updates the comment content.
 
 deleteComment(List<Comment> commentList): Deletes the comment from the list.
+
+getKarma(): Returns the net karma associated with this comment.
 
 **VotingService.java: Represents voting entities and includes the following methods:**
 
