@@ -1,4 +1,4 @@
-package application;
+
 
 public class VotingService {
     Boolean votedPost = null;

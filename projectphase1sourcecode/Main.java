@@ -1,5 +1,3 @@
-package application;
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -33,7 +31,7 @@ public class Main extends Application {
         displayTextArea.setEditable(false);
 
         // Create buttons for authentication and actions
-        
+
         Button loginButton = createActionButton("Login", this::loginUser, false);
         Button registerButton = createActionButton("Register", this::registerUser, false);
         Button logoutButton = createActionButton("Logout", this::logoutUser, true);
