@@ -1,3 +1,5 @@
+package application;
+
 import java.util.List;
 import java.util.Random;
 
@@ -18,7 +20,7 @@ public class Comment {
         this.upvotes = 0;
         this.downvotes = 0;
     }
-
+    
     public int getCommentId() {
         return commentId;
     }

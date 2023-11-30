@@ -1,3 +1,5 @@
+package application;
+
 import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
@@ -9,7 +11,6 @@ public class UserHandler {
     private Random random = new Random();
     private List<PostService> posts;
     private List<Comment> comments;
-    private int karma;
 
     public UserHandler(int userId, String name) {
         this.userId = random.nextInt(1000);
@@ -17,9 +18,8 @@ public class UserHandler {
         this.createdAt = System.currentTimeMillis();
         this.posts = new ArrayList<>();
         this.comments = new ArrayList<>();
-        this.karma = 0;
     }
-
+    
     public int getUserId() {
         return userId;
     }
@@ -51,18 +51,82 @@ public class UserHandler {
     public void addComment(Comment comment) {
         comments.add(comment);
     }
-
-    public int getKarma() {
-        return karma;
+    
+    public List<PostService> getPosts() {
+        return posts;
+    }
+    
+    public int getTotalKarma() {
+        int postKarma = getPostKarma();
+        int commentKarma = getCommentKarma();
+        return postKarma + commentKarma;
     }
 
-    public void calculateKarma() {
-        karma = 0;
+    public int getTotalUpvotes() {
+        int postUpvotes = getPostUpvotes();
+        int commentUpvotes = getCommentUpvotes();
+        return postUpvotes + commentUpvotes;
+    }
+
+    public int getTotalDownvotes() {
+        int postDownvotes = getPostDownvotes();
+        int commentDownvotes = getCommentDownvotes();
+        return postDownvotes + commentDownvotes;
+    }
+
+    private int getPostKarma() {
+        int postKarma = 0;
         for (PostService post : posts) {
-            karma += post.getKarma();
+            postKarma += post.getKarma();
         }
-        for (Comment comment : comments) {
-            karma += comment.getKarma();
+        return postKarma;
+    }
+
+    private int getPostUpvotes() {
+        int postUpvotes = 0;
+        for (PostService post : posts) {
+            postUpvotes += post.getUpvotes();
         }
+        return postUpvotes;
+    }
+
+    private int getPostDownvotes() {
+        int postDownvotes = 0;
+        for (PostService post : posts) {
+            postDownvotes += post.getDownvotes();
+        }
+        return postDownvotes;
+    }
+
+    private int getCommentKarma() {
+        int commentKarma = 0;
+        for (PostService post : posts) {
+            for (Comment comment : post.getComments()) {
+                commentKarma += comment.getKarma();
+            }
+        }
+        return commentKarma;
+    }
+
+    private int getCommentUpvotes() {
+        int commentUpvotes = 0;
+        for (PostService post : posts) {
+            for (Comment comment : post.getComments()) {
+                commentUpvotes += comment.getUpvotes();
+            }
+        }
+        return commentUpvotes;
+    }
+
+    private int getCommentDownvotes() {
+        int commentDownvotes = 0;
+        for (PostService post : posts) {
+            for (Comment comment : post.getComments()) {
+                commentDownvotes += comment.getDownvotes();
+            }
+        }
+        return commentDownvotes;
     }
 }
+
+	
