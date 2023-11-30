@@ -1,4 +1,4 @@
-
+package application;
 
 import java.util.List;
 import java.util.Random;
@@ -11,6 +11,7 @@ public class Comment {
     private int upvotes;
     private int downvotes;
     private Random random = new Random();
+    private String imageUrl;
 
     public Comment(int commentId, int userId, String content) {
         this.commentId = random.nextInt(1000);
@@ -20,7 +21,7 @@ public class Comment {
         this.upvotes = 0;
         this.downvotes = 0;
     }
-    
+
     public int getCommentId() {
         return commentId;
     }
@@ -48,7 +49,7 @@ public class Comment {
     public int getKarma() {
         return upvotes - downvotes;
     }
-    
+
     public void deleteComment(List<Comment> commentList) {
         commentList.remove(this);
     }
@@ -71,5 +72,12 @@ public class Comment {
 
     void removeDownVote() {
         downvotes--;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

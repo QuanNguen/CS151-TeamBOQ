@@ -1,4 +1,4 @@
-
+package application;
 
 import java.util.List;
 import java.util.Random;
@@ -62,12 +62,6 @@ public class PostService {
 
     public void addComment(Comment comment) {
         comments.add(comment);
-    }
-    
-    public void removeComment(Comment comment) {
-        if (comments.contains(comment)) {
-            comments.remove(comment);
-        }
     }
 
     void upvote() {

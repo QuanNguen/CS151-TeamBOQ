@@ -1,13 +1,23 @@
+package application;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.text.Text;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.FlowPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class Main extends Application {
@@ -18,6 +28,7 @@ public class Main extends Application {
 
     private UserHandler loggedInUser;
     private TextArea displayTextArea;
+    private ImageView profilePictureView;
 
     public static void main(String[] args) {
         launch(args);
@@ -30,6 +41,10 @@ public class Main extends Application {
         displayTextArea = new TextArea();
         displayTextArea.setEditable(false);
 
+        profilePictureView = new ImageView();
+        profilePictureView.setFitHeight(100);
+        profilePictureView.setFitWidth(100);
+
         // Create buttons for authentication and actions
 
         Button loginButton = createActionButton("Login", this::loginUser, false);
@@ -38,13 +53,16 @@ public class Main extends Application {
         Button createPostButton = createActionButton("Create Post", this::createPost, true);
         Button createCommentButton = createActionButton("Create Comment", this::createComment, true);
         Button removePostButton = createActionButton("Remove Post", this::removePost, true);
-        Button updatePostButton = createActionButton("Update Post", this::updatePost, true);
+        Button updatePostButton = createActionButton("Edit Post", this::updatePost, true);
         Button upvotePostButton = createActionButton("Upvote Post", this::upvotePost, true);
         Button downvotePostButton = createActionButton("Downvote Post", this::downvotePost, true);
         Button upvoteCommentButton = createActionButton("Upvote Comment", this::upvoteComment, true);
         Button downvoteCommentButton = createActionButton("Downvote Comment", this::downvoteComment, true);
-        Button updateCommentButton = createActionButton("Update Comment", this::updateComment, true);
+        Button updateCommentButton = createActionButton("Edit Comment", this::updateComment, true);
         Button deleteCommentButton = createActionButton("Delete Comment", this::deleteComment, true);
+
+        Button selectProfilePicture = createActionButton("Select Profile Picture", this::selectProfilePicture, true);
+        selectProfilePicture.setOnAction(event -> selectProfilePicture());
 
         // Create buttons for navigation
         Button homeButton = createNavigationButton("Home", this::showHomePage);
@@ -56,13 +74,30 @@ public class Main extends Application {
         navigationBox.setPadding(new Insets(10));
         navigationBox.getChildren().addAll(homeButton, commentsButton, usersButton);
 
-        // Create layout for authentication and actions
-        HBox actionBox = new HBox(10);
-        actionBox.setPadding(new Insets(10));
-        actionBox.getChildren().addAll(loginButton, registerButton, logoutButton, createPostButton,
-                createCommentButton, removePostButton, updatePostButton, upvotePostButton, downvotePostButton,
-                upvoteCommentButton, downvoteCommentButton, updateCommentButton, deleteCommentButton);
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+        gridPane.setPadding(new Insets(10));
 
+        // Add buttons to the grid
+        gridPane.add(profilePictureView, 0, 0, 1, 2);
+        gridPane.add(selectProfilePicture, 1, 0);
+        gridPane.add(loginButton, 1, 1);
+        gridPane.add(registerButton, 2, 0);
+        gridPane.add(logoutButton, 2, 1);
+        gridPane.add(createPostButton, 3, 0);
+        gridPane.add(createCommentButton, 3, 1);
+        gridPane.add(removePostButton, 4, 0);
+        gridPane.add(updatePostButton, 4, 1);
+        gridPane.add(upvotePostButton, 5, 0);
+        gridPane.add(downvotePostButton, 5, 1);
+        gridPane.add(upvoteCommentButton, 6, 0);
+        gridPane.add(downvoteCommentButton, 6, 1);
+        gridPane.add(updateCommentButton, 7, 0);
+        gridPane.add(deleteCommentButton, 7, 1);
+
+        HBox actionBox = new HBox(10);
+        actionBox.getChildren().addAll(gridPane);
 
         // Create home page
         showHomePage();
@@ -80,6 +115,30 @@ public class Main extends Application {
     }
 
     // Other methods
+
+    private void selectProfilePicture() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Profile Picture");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif", "*.bmp")
+        );
+
+        // Check if the user is logged in before allowing them to set a profile picture
+        if (loggedInUser != null) {
+            File selectedFile = fileChooser.showOpenDialog(null);
+            if (selectedFile != null) {
+                // Update the user's profile picture
+                loggedInUser.setProfilePicture(selectedFile.getAbsolutePath());
+                Image selectedImage = new Image(selectedFile.toURI().toString());
+                profilePictureView.setImage(selectedImage);
+                displayTextArea.appendText("Profile picture set for " + loggedInUser.getName() + "\n");
+            }
+        } else {
+            showAlert(Alert.AlertType.INFORMATION, "Action not allowed", "Please log in to set a profile picture.");
+        }
+    }
+
+
     private Button createNavigationButton(String buttonText, Runnable action) {
         Button button = new Button(buttonText);
         button.setOnAction(event -> action.run());
@@ -161,16 +220,46 @@ public class Main extends Application {
         dialog.setTitle("Create Comment");
         dialog.setHeaderText("Enter your comment:");
 
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Image or GIF");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif", "*.bmp")
+        );
+
+        // Create a button to trigger file selection
+        Button selectImageButton = new Button("Select Image or GIF");
+        selectImageButton.setOnAction(event -> {
+            File selectedFile = fileChooser.showOpenDialog(null);
+            if (selectedFile != null) {
+                dialog.getEditor().setText(selectedFile.getAbsolutePath());
+            }
+        });
+
+        // Add the button to the dialog pane
+        dialog.getDialogPane().setExpandableContent(new HBox(selectImageButton));
+
         dialog.showAndWait().ifPresent(content -> {
             PostService latestPost = postList.get(postList.size() - 1);
-            Comment newComment = new Comment(commentList.size() + 1, loggedInUser.getUserId(), content);
-            loggedInUser.addComment(newComment);
-            latestPost.addComment(newComment);
-            commentList.add(newComment);
-            displayTextArea.appendText("Comment on post by user " + newComment.getUserId() + ": " + newComment.getContent() + "\n");
+
+            // Check if the comment content is a valid file path
+            File file = new File(content);
+            if (file.exists()) {
+                // Content is a file path, treat it as an image or GIF
+                Comment newComment = new Comment(commentList.size() + 1, loggedInUser.getUserId(), content);
+                loggedInUser.addComment(newComment);
+                latestPost.addComment(newComment);
+                commentList.add(newComment);
+                displayTextArea.appendText("Image/GIF Comment on post by user " + newComment.getUserId() + ": " + newComment.getContent() + "\n");
+            } else {
+                // Content is not a valid file path, treat it as regular text
+                Comment newComment = new Comment(commentList.size() + 1, loggedInUser.getUserId(), content);
+                loggedInUser.addComment(newComment);
+                latestPost.addComment(newComment);
+                commentList.add(newComment);
+                displayTextArea.appendText("Text Comment on post by user " + newComment.getUserId() + ": " + newComment.getContent() + "\n");
+            }
         });
     }
-
     
     private void updateComment() {
         if (commentList.isEmpty()) {
@@ -180,7 +269,7 @@ public class Main extends Application {
 
         Comment randomComment = commentList.get(commentList.size() - 1);
         TextInputDialog dialog = new TextInputDialog(randomComment.getContent());
-        dialog.setTitle("Update Comment");
+        dialog.setTitle("Edit Comment");
         dialog.setHeaderText("Enter the updated comment content:");
 
         dialog.showAndWait().ifPresent(newContent -> {
@@ -228,7 +317,7 @@ public class Main extends Application {
         PostService randomPost = postList.get(postList.size() - 1);
 
         TextInputDialog dialog = new TextInputDialog(randomPost.getContent());
-        dialog.setTitle("Update Post");
+        dialog.setTitle("Edit Post");
         dialog.setHeaderText("Enter the updated post content:");
 
         dialog.showAndWait().ifPresent(newContent -> {
@@ -313,13 +402,36 @@ public class Main extends Application {
     }
 
     private void displayComments(List<Comment> comments) {
-        Collections.sort(comments, (c1, c2) -> Integer.compare(c2.getKarma(), c1.getKarma()));
+        Collections.sort(comments, Comparator.comparingInt(Comment::getKarma).reversed());
+
         for (Comment comment : comments) {
-            displayTextArea.appendText(comment.getContent() + " (Karma: " + comment.getKarma() + ", Upvotes: " +
-                    comment.getUpvotes() + ", Downvotes: " + comment.getDownvotes() + ")\n");
+            if (comment.getImageUrl() != null && !comment.getImageUrl().isEmpty()) {
+                try {
+                    // Convert image/gif URL to Image
+                    Image image = new Image(comment.getImageUrl());
+
+                    // Display image/gif comments
+                    ImageView imageView = new ImageView(image);
+                    imageView.setFitHeight(100);
+                    imageView.setFitWidth(100);
+
+                    displayTextArea.appendText(comment.getContent() + " (Karma: " + comment.getKarma() +
+                            ", Upvotes: " + comment.getUpvotes() + ", Downvotes: " + comment.getDownvotes() + ")\n");
+                    
+                    displayTextArea.appendText("Image/GIF Comment:\n");
+                    
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    displayTextArea.appendText("Error loading image: " + comment.getImageUrl() + "\n");
+                }
+            } else {
+                // Display regular text comments
+                displayTextArea.appendText(comment.getContent() + " (Karma: " + comment.getKarma() +
+                        ", Upvotes: " + comment.getUpvotes() + ", Downvotes: " + comment.getDownvotes() + ")\n");
+            }
         }
     }
-
+    
     private void displayUsers(List<UserHandler> users) {
         Collections.sort(users, (u1, u2) -> Integer.compare(u2.getTotalKarma(), u1.getTotalKarma()));
         for (UserHandler user : users) {
