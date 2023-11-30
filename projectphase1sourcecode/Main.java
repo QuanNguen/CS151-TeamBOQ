@@ -45,6 +45,8 @@ public class Main extends Application {
         Button downvotePostButton = createActionButton("Downvote Post", this::downvotePost, true);
         Button upvoteCommentButton = createActionButton("Upvote Comment", this::upvoteComment, true);
         Button downvoteCommentButton = createActionButton("Downvote Comment", this::downvoteComment, true);
+        Button updateCommentButton = createActionButton("Update Comment", this::updateComment, true);
+        Button deleteCommentButton = createActionButton("Delete Comment", this::deleteComment, true);
 
         // Create buttons for navigation
         Button homeButton = createNavigationButton("Home", this::showHomePage);
@@ -61,7 +63,8 @@ public class Main extends Application {
         actionBox.setPadding(new Insets(10));
         actionBox.getChildren().addAll(loginButton, registerButton, logoutButton, createPostButton,
                 createCommentButton, removePostButton, updatePostButton, upvotePostButton, downvotePostButton,
-                upvoteCommentButton, downvoteCommentButton);
+                upvoteCommentButton, downvoteCommentButton, updateCommentButton, deleteCommentButton);
+
 
         // Create home page
         showHomePage();
@@ -71,7 +74,7 @@ public class Main extends Application {
         layout.getChildren().addAll(navigationBox, actionBox, displayTextArea);
 
         // Set up the scene
-        Scene scene = new Scene(layout, 1200, 600);
+        Scene scene = new Scene(layout, 1400, 600);
         primaryStage.setScene(scene);
 
         // Show the stage
@@ -151,6 +154,11 @@ public class Main extends Application {
             return;
         }
 
+        // Create a new user for each new comment
+        UserHandler newUser = new UserHandler(userList.size() + 1, "User" + (userList.size() + 1));
+        userList.add(newUser);
+        loggedInUser = newUser;
+
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Create Comment");
         dialog.setHeaderText("Enter your comment:");
@@ -158,39 +166,77 @@ public class Main extends Application {
         dialog.showAndWait().ifPresent(content -> {
             PostService latestPost = postList.get(postList.size() - 1);
             Comment newComment = new Comment(commentList.size() + 1, loggedInUser.getUserId(), content);
+            loggedInUser.addComment(newComment);
             latestPost.addComment(newComment);
             commentList.add(newComment);
             displayTextArea.appendText("Comment on post by user " + newComment.getUserId() + ": " + newComment.getContent() + "\n");
         });
     }
 
+    
+    private void updateComment() {
+        if (commentList.isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Action failed", "No comments available to update.");
+            return;
+        }
+
+        Comment randomComment = commentList.get(commentList.size() - 1);
+        TextInputDialog dialog = new TextInputDialog(randomComment.getContent());
+        dialog.setTitle("Update Comment");
+        dialog.setHeaderText("Enter the updated comment content:");
+
+        dialog.showAndWait().ifPresent(newContent -> {
+            randomComment.updateComment(newContent);
+            displayTextArea.appendText("Comment updated: " + randomComment.getContent() + "\n");
+        });
+    }
+
+    private void deleteComment() {
+        if (commentList.isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Action failed", "No comments available to delete.");
+            return;
+        }
+
+        Comment randomComment = commentList.remove(commentList.size() - 1);
+        displayTextArea.appendText("Comment deleted: " + randomComment.getContent() + "\n");
+    }
+
     private void removePost() {
-        if (loggedInUser.getPosts().isEmpty()) {
+        if (postList.isEmpty()) {
             showAlert(Alert.AlertType.ERROR, "Action failed", "No posts available to remove.");
             return;
         }
 
-        PostService randomPost = loggedInUser.getPosts().get(0);
-        loggedInUser.getPosts().remove(randomPost);
-        postList.remove(randomPost);
-        displayTextArea.appendText("Post removed: " + randomPost.getContent() + "\n");
+        // Get the last post created in the system
+        PostService removedPost = postList.get(postList.size() - 1);
+
+        // Remove all comments associated with the removed post
+        for (Comment comment : removedPost.getComments()) {
+            commentList.remove(comment);
+        }
+
+        postList.remove(removedPost);
+        // Display a simple message indicating post removal
+        displayTextArea.appendText("Post removed.\n");
     }
 
-
     private void updatePost() {
-        if (loggedInUser.getPosts().isEmpty()) {
+        if (postList.isEmpty()) {
             showAlert(Alert.AlertType.ERROR, "Action failed", "No posts available to update.");
             return;
         }
 
-        PostService randomPost = loggedInUser.getPosts().get(0);
+        // Get the last post created in the system
+        PostService randomPost = postList.get(postList.size() - 1);
+
         TextInputDialog dialog = new TextInputDialog(randomPost.getContent());
         dialog.setTitle("Update Post");
         dialog.setHeaderText("Enter the updated post content:");
 
         dialog.showAndWait().ifPresent(newContent -> {
             randomPost.updatePost(newContent);
-            displayTextArea.appendText("Post updated: " + randomPost.getContent() + "\n");
+            // Display a simple message indicating post update
+            displayTextArea.appendText("Post updated.\n");
         });
     }
 
@@ -279,8 +325,8 @@ public class Main extends Application {
     private void displayUsers(List<UserHandler> users) {
         Collections.sort(users, (u1, u2) -> Integer.compare(u2.getTotalKarma(), u1.getTotalKarma()));
         for (UserHandler user : users) {
-            displayTextArea.appendText(user.getName() + " (Total Karma: " + user.getTotalKarma() +
-                    ", Total Upvotes: " + user.getTotalUpvotes() + ", Total Downvotes: " + user.getTotalDownvotes() + ")\n");
+            displayTextArea.appendText(user.getName() + " (Karma: " + user.getTotalKarma() +
+                    ", Upvotes: " + user.getTotalUpvotes() + ", Downvotes: " + user.getTotalDownvotes() + ")\n");
         }
     }
 }
