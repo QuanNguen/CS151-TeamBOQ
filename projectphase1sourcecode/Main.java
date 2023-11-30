@@ -36,6 +36,8 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Reddit Clone");
 
+        primaryStage.getIcons().add(new Image("BOQ.png"));
+        
         displayTextArea = new TextArea();
         displayTextArea.setEditable(false);
 
