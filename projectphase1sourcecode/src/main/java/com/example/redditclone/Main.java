@@ -157,35 +157,64 @@ public class Main extends Application {
         return button;
     }
 
-    private void loginUser() {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Login");
-        dialog.setHeaderText("Enter your username:");
+	private void loginUser() {
+		if (this.loggedInUser != null) {
+			showAlert(Alert.AlertType.ERROR, "Login failed", "You are already logged in.");
+		}
+		else {
+			TextInputDialog dialog = new TextInputDialog();
+			dialog.setTitle("Login");
+			dialog.setHeaderText("Enter your username:");
 
-        dialog.showAndWait().ifPresent(username -> {
-            for (UserHandler user : userList) {
-                if (user.getName().equals(username)) {
-                    loggedInUser = user;
-                    displayTextArea.appendText("Logged in as: " + loggedInUser.getName() + "\n");
-                    return;
-                }
-            }
-            showAlert(Alert.AlertType.ERROR, "Login failed", "User not found.");
-        });
-    }
+			dialog.showAndWait().ifPresent(username -> {
+				for (UserHandler user : userList) {
+					if (user.getName().equals(username)) {
+						loggedInUser = user;
+						displayTextArea.appendText("Logged in as: " + loggedInUser.getName() + "\n");
+						return;
+					}
+				}
+				showAlert(Alert.AlertType.ERROR, "Login failed", "User not found.");
+			});
+		}
+	} 
 
-    private void registerUser() {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Register");
-        dialog.setHeaderText("Enter your desired username:");
+	private void registerUser() {
+		if (this.loggedInUser != null) {
+			showAlert(Alert.AlertType.ERROR, "Registration failed", "You are already logged in.");
+		}
+		else {
+			TextInputDialog dialog = new TextInputDialog();
+			dialog.setTitle("Register");
+			dialog.setHeaderText("Enter your desired username:");
 
-        dialog.showAndWait().ifPresent(username -> {
-            UserHandler newUser = new UserHandler(userList.size() + 1, username);
-            userList.add(newUser);
-            loggedInUser = newUser;
-            displayTextArea.appendText("Registered and logged in as: " + loggedInUser.getName() + "\n");
-        });
-    }
+			dialog.showAndWait().ifPresent(username -> {
+				boolean userTaken = false;
+				int userIndex = 0;
+				while (!userTaken && userIndex < userList.size()) {
+					UserHandler userTemp = userList.get(userIndex);
+					if (userTemp.getName().equals(username)) {
+						userTaken = true;
+					}
+					userIndex++;
+				}
+				if (username.isBlank()) { 
+					showAlert(Alert.AlertType.ERROR, "Registration failed", "Please create a username of at least length 1.");
+				}
+				else {
+					if (userTaken) {
+						showAlert(Alert.AlertType.ERROR, "Registration failed", "Username already taken.");
+					}
+					else {
+						UserHandler newUser = new UserHandler(userList.size() + 1, username);
+						userList.add(newUser);
+						loggedInUser = newUser;
+						displayTextArea.appendText("Registered and logged in as: " + loggedInUser.getName() + "\n");
+					}
+				}
+			});
+		}
+	}
 
     private void logoutUser() {
         loggedInUser = null;
