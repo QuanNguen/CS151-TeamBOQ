@@ -20,8 +20,6 @@ PostService: A class representing posts. It includes methods for creating, updat
 
 Comment: A class representing comments. It includes methods for creating, updating, and deleting comments.
 
-VotingService: A class representing upvotes, downvotes, and karma. It includes methods for upvoting and downvoting comments and posts.
-
 ### Class Responsibilities
 
 **Main.java: The primary driver of the code, responsible for the following:**
@@ -71,16 +69,6 @@ updateComment(String newContent): Updates the comment content.
 deleteComment(List<Comment> commentList): Deletes the comment from the list.
 
 getKarma(): Returns the net karma associated with this comment.
-
-**VotingService.java: Represents voting entities and includes the following methods:**
-
-upVote(PostService post): Upvotes a post and checks the current state of votedPost to determine what action to take
-
-upVote(Comment comment): Upvotes a comment and checks the current state of votedComment
-
-downVote(PostService post): Downvotes a post and checks the current state of votedPost to determine what action to take
-
-downVote(Comment comment): Downvotes a comment and checks the current state of votedPost to determine what action to take
 
 ### Basic Interactions
 
