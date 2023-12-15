@@ -95,3 +95,7 @@ The Main class sorts users, posts, and comments by their creation time and displ
 Upvoting and Downvoting:
 
 The VotingService class handles the voting functionality for comments and posts.
+
+### Extra Credit
+
+Added profile pictures for users
